@@ -515,51 +515,6 @@ async function main() {
   }
 }
 
-// Run main function if this file is executed directly
-// Note: Always run main in CLI mode since this is an MCP server
-console.error("Starting MCP server initialization...");
-console.error("process.argv:", process.argv);
-
-// Check if running as main module - compatible with both ESM and CommonJS
-let isMainModule = false;
-try {
-  // Try ESM approach first
-  if (typeof import.meta !== "undefined" && import.meta.url) {
-    console.error("import.meta.url:", import.meta.url);
-    isMainModule =
-      import.meta.url === `file://${process.argv[1]}` ||
-      import.meta.url.endsWith(process.argv[1]) ||
-      process.argv[1].endsWith("index.js");
-  } else {
-    // Fallback for CommonJS or when import.meta is not available
-    isMainModule =
-      process.argv[1].endsWith("index.js") ||
-      process.argv[1].includes("naver-search-mcp");
-  }
-  
-  // Additional check for NPX execution
-  if (!isMainModule && process.argv.some(arg => arg.includes('naver-search-mcp'))) {
-    isMainModule = true;
-    console.error("Detected NPX execution, forcing main module mode");
-  }
-} catch (error) {
-  // Fallback for environments where import.meta causes issues
-  isMainModule =
-    process.argv[1].endsWith("index.js") ||
-    process.argv[1].includes("naver-search-mcp");
-}
-
-console.error("isMainModule:", isMainModule);
-
-if (isMainModule) {
-  console.error("Running as main module, starting server...");
-  main().catch((error) => {
-    console.error("Server failed to start:", error);
-    process.exit(1);
-  });
-} else {
-  console.error("Not running as main module, skipping server start");
-}
 // Run stdio mode only when index.js itself is executed directly.
 const isMainModule =
   process.argv[1]?.endsWith("/index.js") === true ||
@@ -567,6 +522,7 @@ const isMainModule =
 
 if (isMainModule) {
   console.error("Running as main module, starting stdio server...");
+
   main().catch((error) => {
     console.error("Server failed to start:", error);
     process.exit(1);
