@@ -560,3 +560,15 @@ if (isMainModule) {
 } else {
   console.error("Not running as main module, skipping server start");
 }
+// Run stdio mode only when index.js itself is executed directly.
+const isMainModule =
+  process.argv[1]?.endsWith("/index.js") === true ||
+  process.argv[1]?.endsWith("\\index.js") === true;
+
+if (isMainModule) {
+  console.error("Running as main module, starting stdio server...");
+  main().catch((error) => {
+    console.error("Server failed to start:", error);
+    process.exit(1);
+  });
+}
