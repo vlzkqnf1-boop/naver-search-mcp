@@ -4,8 +4,9 @@ import { NaverLocalSearchParams } from "../schemas/search.schemas.js";
 import { SearchArgs } from "../schemas/search.schemas.js";
 import { SearchArgsSchema } from "../schemas/search.schemas.js";
 
-// 클라이언트 인스턴스
-const client = NaverSearchClient.getInstance();
+function getClient() {
+  return NaverSearchClient.getInstance();
+}
 
 export const searchToolHandlers: Record<string, (args: any) => Promise<any>> = {
   search_webkr: (args) => {
